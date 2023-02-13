@@ -3,7 +3,6 @@ package com.nds.filmstarterapp.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,15 +12,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.FilmViewModel
 import com.nds.filmstarterapp.model.Film
-import com.nds.filmstarterapp.ui.theme.FilmStarterAppTheme
+import com.nds.filmstarterapp.ui.theme.*
 
 @Composable
 fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, filmId: Int) {
@@ -45,7 +42,7 @@ fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, fi
 fun FrontLayer(film: Film) {
     Column(
         modifier = Modifier
-            .clip(shape = RoundedCornerShape(30.dp))
+            .clip(Shapes.detailScreenColumnShape)
             .background(color = MaterialTheme.colors.background)
             .height(500.dp)
             .fillMaxWidth()
@@ -57,15 +54,14 @@ fun FrontLayer(film: Film) {
         )
         Text(
             text = stringResource(id = film.name),
-            fontSize = 20.sp,
-            fontWeight = FontWeight(500),
-            modifier = Modifier.padding(start = 20.dp, end = 8.dp)
+            modifier = Modifier.padding(start = 20.dp, end = 8.dp),
+            style = MaterialTheme.typography.detailScreenName
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = stringResource(id = film.description),
-            fontWeight = FontWeight(400),
-            modifier = Modifier.padding(start = 20.dp, end = 8.dp)
+            modifier = Modifier.padding(start = 20.dp, end = 8.dp),
+            style = MaterialTheme.typography.detailScreenDescription
         )
     }
 }
@@ -75,7 +71,7 @@ fun BackLayer(film: Film) {
     Image(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(30.dp)),
+            .clip(Shapes.detailScreenImageShape),
         painter = painterResource(id = film.photo),
         contentDescription = null,
         contentScale = ContentScale.FillWidth

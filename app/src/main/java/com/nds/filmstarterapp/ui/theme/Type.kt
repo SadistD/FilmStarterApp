@@ -12,7 +12,7 @@ val Typography = Typography(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
-    )
+    ),
     /* Other default text styles to override
     button = TextStyle(
         fontFamily = FontFamily.Default,
@@ -26,3 +26,31 @@ val Typography = Typography(
     )
     */
 )
+
+val Typography.filmCardDescription: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(400),
+        fontSize = 12.sp
+    )
+
+val Typography.filmCardName: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(500),
+        fontSize = 14.sp
+    )
+
+val Typography.detailScreenDescription: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(400),
+        fontSize = 14.sp
+    )
+
+val Typography.detailScreenName: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(500),
+        fontSize = 20.sp
+    )
