@@ -1,26 +1,32 @@
-package com.nds.filmstarterapp.ui.screen
+package com.nds.filmstarterapp.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.FilmViewModel
-import com.nds.filmstarterapp.model.Film
 import com.nds.filmstarterapp.ui.theme.FilmStarterAppTheme
 
 @Composable
-fun FilmFirstScreen(filmList: List<Film>) {
+fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
+    val filmList = viewModel.getFilm()
     LazyVerticalGrid(
         columns = GridCells.Adaptive(160.dp),
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 50.dp),
         content = {
             items(filmList.size) { index: Int ->
-                FilmCard(film = filmList[index])
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    FilmCard(navController = navController, film = filmList[index])
+                }
             }
         }
     )
@@ -29,8 +35,9 @@ fun FilmFirstScreen(filmList: List<Film>) {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun FirstScreenPreview() {
     FilmStarterAppTheme {
-        FilmFirstScreen(FilmViewModel().getFilm())
+        val viewModel = FilmViewModel()
+        FilmFirstScreen(navController = rememberNavController(), viewModel = viewModel)
     }
 }
