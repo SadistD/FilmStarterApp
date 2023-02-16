@@ -1,11 +1,11 @@
 package com.nds.filmstarterapp.utils
 
 object Constants {
-    object Key{
+    object Key {
         const val ID = "Id"
     }
 
-    object Screen{
+    object Screen {
         const val FIRST_SCREEN = "first_screen"
         const val DETAILS_SCREEN = "details_screen"
     }
