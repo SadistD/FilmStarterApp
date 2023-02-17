@@ -11,18 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.FilmViewModel
 import com.nds.filmstarterapp.model.Film
 import com.nds.filmstarterapp.ui.theme.*
 
 @Composable
 fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, filmId: Int) {
-    val film = viewModel.getFilm().first { it.id == filmId }
+    val film = viewModel.films.first { it.id == filmId }
     Box(modifier = Modifier.fillMaxSize()) {
         BackLayer(film = film)
 
@@ -53,13 +51,13 @@ fun FrontLayer(film: Film) {
             modifier = Modifier.padding(20.dp)
         )
         Text(
-            text = stringResource(id = film.name),
+            text = film.name,
             modifier = Modifier.padding(start = 20.dp, end = 8.dp),
             style = MaterialTheme.typography.detailScreenName
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = stringResource(id = film.description),
+            text = film.description,
             modifier = Modifier.padding(start = 20.dp, end = 8.dp),
             style = MaterialTheme.typography.detailScreenDescription
         )
@@ -69,25 +67,19 @@ fun FrontLayer(film: Film) {
 @Composable
 fun BackLayer(film: Film) {
     Image(
+        painter = painterResource(id = film.photo),
+        contentDescription = null,
         modifier = Modifier
             .fillMaxWidth()
             .clip(Shapes.detailScreenImageShape),
-        painter = painterResource(id = film.photo),
-        contentDescription = null,
+
         contentScale = ContentScale.FillWidth
     )
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {
     FilmStarterAppTheme {
-        val viewModel = FilmViewModel()
-        FilmDetailsScreen(
-            navController = rememberNavController(),
-            viewModel = viewModel,
-            filmId = 1
-        )
     }
 }

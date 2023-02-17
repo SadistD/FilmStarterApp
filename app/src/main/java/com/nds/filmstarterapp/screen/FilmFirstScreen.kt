@@ -11,13 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.FilmViewModel
 import com.nds.filmstarterapp.ui.theme.FilmStarterAppTheme
 
 @Composable
 fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
-    val filmList = viewModel.getFilm()
+    val filmList = viewModel.films
     LazyVerticalGrid(
         columns = GridCells.Adaptive(160.dp),
         modifier = Modifier.fillMaxSize(),
@@ -37,7 +36,6 @@ fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
 @Composable
 fun FirstScreenPreview() {
     FilmStarterAppTheme {
-        val viewModel = FilmViewModel()
-        FilmFirstScreen(navController = rememberNavController(), viewModel = viewModel)
+
     }
 }

@@ -17,19 +17,19 @@ sealed class NavRoute(val route: String) {
 }
 
 @Composable
-fun FilmNavHost(mViewModel: FilmViewModel, navController: NavHostController) {
+fun FilmNavHost(viewModel: FilmViewModel, navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavRoute.Start.route) {
         composable(NavRoute.Start.route) {
             FilmFirstScreen(
                 navController = navController,
-                viewModel = mViewModel
+                viewModel = viewModel
             )
         }
         composable(NavRoute.Detail.route + "/{${Constants.Key.ID}}") { backStackEntry ->
             backStackEntry.arguments?.getString(Constants.Key.ID)?.let {
                 FilmDetailsScreen(
                     navController = navController,
-                    viewModel = mViewModel,
+                    viewModel = viewModel,
                     filmId = it.toInt()
                 )
             }
