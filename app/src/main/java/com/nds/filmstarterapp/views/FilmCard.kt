@@ -1,4 +1,4 @@
-package com.nds.filmstarterapp.screen
+package com.nds.filmstarterapp.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.nds.filmstarterapp.PreviewViewModel
 import com.nds.filmstarterapp.model.Film
 import com.nds.filmstarterapp.navigation.NavRoute
 import com.nds.filmstarterapp.ui.theme.Shapes
@@ -27,7 +29,7 @@ import com.nds.filmstarterapp.ui.theme.filmCardName
 fun FilmCard(navController: NavController, film: Film) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
+
             .clickable { navController.navigate(NavRoute.Detail.route + "/${film.id}") },
         horizontalAlignment = Alignment.Start
     ) {
@@ -62,5 +64,6 @@ fun FilmCard(navController: NavController, film: Film) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFilmCard() {
-
+    val film = PreviewViewModel().films[0]
+    FilmCard(navController = rememberNavController(), film = film)
 }

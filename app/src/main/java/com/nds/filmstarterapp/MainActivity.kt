@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            val viewModel: FilmViewModel =
+            val viewModel: MainViewModel =
                 viewModel(factory = FilmViewModelFactory(context.applicationContext as Application))
             val navController = rememberNavController()
             FilmStarterAppTheme {

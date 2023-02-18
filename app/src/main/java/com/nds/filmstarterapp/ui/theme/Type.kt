@@ -54,3 +54,10 @@ val Typography.detailScreenName: TextStyle
         fontWeight = FontWeight(500),
         fontSize = 20.sp
     )
+
+val Typography.filmFirstScreenHeading: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(700),
+        fontSize = 16.sp
+    )
