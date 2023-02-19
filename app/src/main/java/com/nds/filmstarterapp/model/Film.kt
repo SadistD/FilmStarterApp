@@ -8,5 +8,6 @@ data class Film(
     @DrawableRes val photo: Int,
     val date_publication: Int,
     val rating: Double,
-    val description: String
+    val description: String,
+    val ageRating: String
 )

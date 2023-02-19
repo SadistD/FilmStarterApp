@@ -2,8 +2,7 @@ package com.nds.filmstarterapp.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import com.nds.filmstarterapp.ui.theme.filmCardName
 fun FilmCard(navController: NavController, film: Film) {
     Column(
         modifier = Modifier
-
             .clickable { navController.navigate(NavRoute.Detail.route + "/${film.id}") },
         horizontalAlignment = Alignment.Start
     ) {
@@ -56,8 +54,19 @@ fun FilmCard(navController: NavController, film: Film) {
             overflow = TextOverflow.Ellipsis,
             maxLines = 5
         )
-
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RatingBar(
+                modifier = Modifier.height(13.dp),
+                rating = film.rating
+            )
+            AgeRating(ageRating = film.ageRating)
+        }
     }
 }
 
