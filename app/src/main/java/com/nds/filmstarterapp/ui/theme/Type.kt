@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.nds.filmstarterapp.ui.theme
 
 import androidx.compose.material.Typography
@@ -53,4 +55,18 @@ val Typography.detailScreenName: TextStyle
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(500),
         fontSize = 20.sp
+    )
+
+val Typography.filmFirstScreenHeading: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(700),
+        fontSize = 16.sp
+    )
+
+val Typography.ageRating: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(400),
+        fontSize = 7.sp
     )

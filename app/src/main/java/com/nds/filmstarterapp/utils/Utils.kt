@@ -45,7 +45,8 @@ private fun mapJsonToFilm(json: String): List<Film> {
                 },
                 date_publication = filmJson.getInt("date_publication"),
                 rating = filmJson.getDouble("rating"),
-                description = filmJson.getString("description")
+                description = filmJson.getString("description"),
+                ageRating = filmJson.getString("ageRating")
             )
             films.add(film)
         }
