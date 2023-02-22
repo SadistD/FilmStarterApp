@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nds.filmstarterapp.FilmViewModel
+import com.nds.filmstarterapp.viewModel.FilmViewModel
 import com.nds.filmstarterapp.screen.FilmDetailsScreen
 import com.nds.filmstarterapp.screen.FilmFirstScreen
 import com.nds.filmstarterapp.utils.Constants
