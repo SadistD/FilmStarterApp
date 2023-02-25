@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nds.filmstarterapp.R
+import com.nds.filmstarterapp.model.Actor
 import com.nds.filmstarterapp.model.Film
 import com.nds.filmstarterapp.utils.loadJson
 import kotlinx.coroutines.flow.*
@@ -106,7 +107,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1999,
                 rating = 9.1,
                 description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             ),
             Film(
                 id = 2,
@@ -115,7 +131,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1994,
                 rating = 9.1,
                 description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             ),
             Film(
                 id = 3,
@@ -124,7 +155,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1999,
                 rating = 9.1,
                 description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             ),
             Film(
                 id = 4,
@@ -133,7 +179,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1994,
                 rating = 9.1,
                 description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             ),
             Film(
                 id = 5,
@@ -142,7 +203,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1994,
                 rating = 9.1,
                 description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             ),
             Film(
                 id = 6,
@@ -151,7 +227,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1994,
                 rating = 9.1,
                 description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             ),
             Film(
                 id = 7,
@@ -160,7 +251,22 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
                 date_publication = 1994,
                 rating = 9.1,
                 description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+"
+                ageRating = "16+",
+                category = "Драма",
+                actors = listOf(
+                    Actor(
+                        name = "Том Хэнкс",
+                        photo = R.drawable.tom_hanks
+                    ),
+                    Actor(
+                        name = "Майкл Кларк Дункан",
+                        photo = R.drawable.michael_clarke
+                    ),
+                    Actor(
+                        name = "Дэвид Морс",
+                        photo = R.drawable.david_morse
+                    )
+                )
             )
         )
     )

@@ -70,3 +70,24 @@ val Typography.ageRating: TextStyle
         fontWeight = FontWeight(400),
         fontSize = 7.sp
     )
+
+val Typography.category: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(400),
+        fontSize = 10.sp
+    )
+
+val Typography.date: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(400),
+        fontSize = 12.sp
+    )
+
+val Typography.filmDetailScreenHeading: TextStyle
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(500),
+        fontSize = 16.sp
+    )

@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">Film Starter App</string>
-    <string name="the_green_mile">Зелёная миля</string>
-    <string name="the_green_mile_description">В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга</string>
-    <string name="the_shawshank_redemption">Побег из Шоушенка</string>
-    <string name="the_shawshank_redemption_description">Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.</string>
+    <string name="app_name" translatable="false">Film Starter App</string>
+    <string name="year">" год."</string>
+    <string name="first_screen_header">Популярно сейчас</string>
+    <string name="actors">Актёры</string>
 </resources>
