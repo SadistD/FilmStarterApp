@@ -1,8 +1,9 @@
 package com.nds.filmstarterapp.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,20 +29,18 @@ import com.nds.filmstarterapp.views.AgeRating
 import com.nds.filmstarterapp.views.CategoryChips
 import com.nds.filmstarterapp.views.RatingBar
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, filmId: Int) {
     val film = viewModel.films.collectAsState().value.first { it.id == filmId }
-    Box(modifier = Modifier.fillMaxSize()) {
+    val configuration = LocalConfiguration.current
+    BottomSheetScaffold(
+        sheetContent = { FrontLayer(film = film) },
+        sheetPeekHeight = configuration.screenHeightDp.dp - configuration.screenHeightDp.dp / 3,
+        sheetShape = MaterialTheme.shapes.detailScreenColumnShape,
+        sheetBackgroundColor = MaterialTheme.colors.background
+    ) {
         BackLayer(film = film)
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-
-        ) {
-            FrontLayer(film = film)
-        }
-
     }
 }
 
@@ -48,8 +48,6 @@ fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, fi
 fun FrontLayer(film: Film) {
     Column(
         modifier = Modifier
-            .clip(Shapes.detailScreenColumnShape)
-            .background(color = MaterialTheme.colors.background)
             .fillMaxWidth()
 
     ) {
