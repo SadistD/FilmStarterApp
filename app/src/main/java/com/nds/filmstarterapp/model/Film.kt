@@ -9,5 +9,7 @@ data class Film(
     val date_publication: Int,
     val rating: Double,
     val description: String,
-    val ageRating: String
+    val ageRating: String,
+    val category: String,
+    val actors: List<Actor> = emptyList()
 )

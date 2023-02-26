@@ -3,74 +3,206 @@
     {
       "id": 1,
       "name": "Зелёная миля",
-      "photo": "the_green_mile.webp",
+      "photo": "the_green_mile",
       "date_publication": 1999,
       "rating": 9.1,
       "description": "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Том Хэнкс",
+          "photo": "tom_hanks"
+        },
+        {
+          "name": "Майкл Кларк Дункан",
+          "photo": "michael_clarke"
+        },
+        {
+          "name": "Дэвид Морс",
+          "photo": "david_morse"
+        }
+      ]
     },
     {
       "id": 2,
       "name": "Побег из Шоушенка",
-      "photo": "the_shawshank_redemption.png",
+      "photo": "the_shawshank_redemption",
       "date_publication": 1994,
       "rating": 9.1,
       "description": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Морган Фримен",
+          "photo": "morgan_freeman"
+        },
+        {
+          "name": "Тим Роббинс",
+          "photo": "tim_robbins"
+        },
+        {
+          "name": "Боб Гантон",
+          "photo": "bob_gunton"
+        },
+        {
+          "name": "Клэнси Браун",
+          "photo": "clancy_brown"
+        }
+      ]
     },
     {
       "id": 3,
       "name": "Зелёная миля",
-      "photo": "the_green_mile.webp",
+      "photo": "the_green_mile",
       "date_publication": 1999,
       "rating": 9.1,
       "description": "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Том Хэнкс",
+          "photo": "tom_hanks"
+        },
+        {
+          "name": "Майкл Кларк Дункан",
+          "photo": "michael_clarke"
+        },
+        {
+          "name": "Дэвид Морс",
+          "photo": "david_morse"
+        }
+      ]
     },
     {
       "id": 4,
       "name": "Побег из Шоушенка",
-      "photo": "the_shawshank_redemption.png",
+      "photo": "the_shawshank_redemption",
       "date_publication": 1994,
       "rating": 9.1,
       "description": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Морган Фримен",
+          "photo": "morgan_freeman"
+        },
+        {
+          "name": "Тим Роббинс",
+          "photo": "tim_robbins"
+        },
+        {
+          "name": "Боб Гантон",
+          "photo": "bob_gunton"
+        },
+        {
+          "name": "Клэнси Браун",
+          "photo": "clancy_brown"
+        }
+      ]
     },
     {
       "id": 5,
       "name": "Зелёная миля",
-      "photo": "the_green_mile.webp",
+      "photo": "the_green_mile",
       "date_publication": 1999,
       "rating": 9.1,
       "description": "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Том Хэнкс",
+          "photo": "tom_hanks"
+        },
+        {
+          "name": "Майкл Кларк Дункан",
+          "photo": "michael_clarke"
+        },
+        {
+          "name": "Дэвид Морс",
+          "photo": "david_morse"
+        }
+      ]
     },
     {
       "id": 6,
       "name": "Побег из Шоушенка",
-      "photo": "the_shawshank_redemption.png",
+      "photo": "the_shawshank_redemption",
       "date_publication": 1994,
       "rating": 9.1,
       "description": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Морган Фримен",
+          "photo": "morgan_freeman"
+        },
+        {
+          "name": "Тим Роббинс",
+          "photo": "tim_robbins"
+        },
+        {
+          "name": "Боб Гантон",
+          "photo": "bob_gunton"
+        },
+        {
+          "name": "Клэнси Браун",
+          "photo": "clancy_brown"
+        }
+      ]
     },
     {
       "id": 7,
       "name": "Зелёная миля",
-      "photo": "the_green_mile.webp",
+      "photo": "the_green_mile",
       "date_publication": 1999,
       "rating": 9.1,
       "description": "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Том Хэнкс",
+          "photo": "tom_hanks"
+        },
+        {
+          "name": "Майкл Кларк Дункан",
+          "photo": "michael_clarke"
+        },
+        {
+          "name": "Дэвид Морс",
+          "photo": "david_morse"
+        }
+      ]
     },
     {
       "id": 8,
       "name": "Зелёная миля",
-      "photo": "the_green_mile.webp",
+      "photo": "the_green_mile",
       "date_publication": 1999,
       "rating": 9.1,
       "description": "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-      "ageRating": "16+"
+      "ageRating": "16+",
+      "category": "Драмы",
+      "actors": [
+        {
+          "name": "Том Хэнкс",
+          "photo": "tom_hanks"
+        },
+        {
+          "name": "Майкл Кларк Дункан",
+          "photo": "michael_clarke"
+        },
+        {
+          "name": "Дэвид Морс",
+          "photo": "david_morse"
+        }
+      ]
     }
   ]
 }

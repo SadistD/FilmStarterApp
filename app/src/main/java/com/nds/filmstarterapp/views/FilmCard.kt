@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.nds.filmstarterapp.PreviewViewModel
+import com.nds.filmstarterapp.viewModel.PreviewViewModel
 import com.nds.filmstarterapp.model.Film
 import com.nds.filmstarterapp.navigation.NavRoute
 import com.nds.filmstarterapp.ui.theme.Shapes
@@ -73,6 +74,6 @@ fun FilmCard(navController: NavController, film: Film) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFilmCard() {
-    val film = PreviewViewModel().films[0]
+    val film = PreviewViewModel().films.collectAsState().value[0]
     FilmCard(navController = rememberNavController(), film = film)
 }

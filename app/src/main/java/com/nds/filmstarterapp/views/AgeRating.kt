@@ -12,22 +12,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nds.filmstarterapp.ui.theme.ageRating
 
 @Composable
-fun AgeRating(ageRating: String) {
+fun AgeRating(ageRating: String, size: Int = 10) {
     Box(
         modifier = Modifier
-            .size(20.dp)
-            .border(width = 0.5.dp,
-            color = MaterialTheme.colors.onSecondary,
-            shape = CircleShape),
+            .size((size * 2.1).dp)
+            .border(
+                width = (size / 20.0).dp,
+                color = MaterialTheme.colors.onSecondary,
+                shape = CircleShape
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = ageRating,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.ageRating
+            style = MaterialTheme.typography.ageRating,
+            fontSize = size.sp
         )
 
     }

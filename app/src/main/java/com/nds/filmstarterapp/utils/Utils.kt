@@ -2,7 +2,9 @@ package com.nds.filmstarterapp.utils
 
 import android.content.Context
 import com.nds.filmstarterapp.R
+import com.nds.filmstarterapp.model.Actor
 import com.nds.filmstarterapp.model.Film
+import org.json.JSONArray
 import org.json.JSONObject
 
 fun loadJson(context: Context): List<Film> {
@@ -38,15 +40,14 @@ private fun mapJsonToFilm(json: String): List<Film> {
             val film = Film(
                 id = filmJson.getInt("id"),
                 name = filmJson.getString("name"),
-                photo = when (filmJson.getString("photo")) {
-                    "the_green_mile.webp" -> R.drawable.the_green_mile
-                    "the_shawshank_redemption.png" -> R.drawable.the_shawshank_redemption
-                    else -> R.drawable.ic_launcher_background
-                },
+                photo = getResId(filmJson.getString("photo"), R.drawable::class.java)
+                    ?: R.drawable.ic_launcher_background,
                 date_publication = filmJson.getInt("date_publication"),
                 rating = filmJson.getDouble("rating"),
                 description = filmJson.getString("description"),
-                ageRating = filmJson.getString("ageRating")
+                ageRating = filmJson.getString("ageRating"),
+                category = filmJson.getString("category"),
+                actors = getActors(filmJson.getJSONArray("actors"))
             )
             films.add(film)
         }
@@ -55,4 +56,38 @@ private fun mapJsonToFilm(json: String): List<Film> {
     }
 
     return films
+}
+
+private fun getActors(array: JSONArray): List<Actor> {
+    runCatching {
+        return array
+            .toList()
+            .map {
+                Actor(
+                    name = it.getString("name"),
+                    photo = getResId(it.getString("photo"), R.drawable::class.java)!!
+                )
+            }
+    }.onFailure {
+        it.printStackTrace()
+    }
+    return emptyList()
+}
+
+private fun JSONArray.toList(): List<JSONObject> {
+    val jSONObjects = mutableListOf<JSONObject>()
+    for (i in 0 until length()) {
+        jSONObjects.add(getJSONObject(i))
+    }
+    return jSONObjects
+}
+inline fun <reified T> getResId(resName: String, clazz: Class<T>): Int? {
+
+    var result = 0
+
+    runCatching {
+        val field = clazz.getDeclaredField(resName)
+        result = field.getInt(field)
+    }.onFailure { return null }
+    return result
 }

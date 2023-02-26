@@ -13,6 +13,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.navigation.FilmNavHost
 import com.nds.filmstarterapp.ui.theme.FilmStarterAppTheme
+import com.nds.filmstarterapp.viewModel.FilmViewModelFactory
+import com.nds.filmstarterapp.viewModel.MainViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
