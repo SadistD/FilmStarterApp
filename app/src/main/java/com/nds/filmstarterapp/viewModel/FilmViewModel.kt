@@ -8,15 +8,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.nds.filmstarterapp.R
-import com.nds.filmstarterapp.model.Actor
-import com.nds.filmstarterapp.model.Film
-import com.nds.filmstarterapp.utils.loadJson
+import com.nds.filmstarterapp.model.kinopoisk_film.*
+import com.nds.filmstarterapp.repository.common.Common
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 interface FilmViewModel {
-    val films: StateFlow<List<Film>>
+    val films: StateFlow<List<FilmInList>>
     val searchFieldState: State<SearchFieldState>
 
     fun changeSearchFieldFocus()
@@ -26,13 +24,11 @@ interface FilmViewModel {
 
 class MainViewModel(application: Application) : AndroidViewModel(application), FilmViewModel {
     private val context = application
-    private val filmsList = MutableStateFlow(mutableListOf<Film>())
-    override val films = filmsList.asStateFlow()
+    private val filmsList = MutableStateFlow(mutableListOf<FilmInList>())
+    override val films: StateFlow<List<FilmInList>> = filmsList.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            filmsList.value.addAll(loadJson(context))
-        }
+        getFilms("", emptyList(), "HAZCP41-NGQ4XYG-H1SMS2R-0JH96E7")
     }
 
     private val _searchFieldState: MutableState<SearchFieldState> = mutableStateOf(
@@ -57,15 +53,33 @@ class MainViewModel(application: Application) : AndroidViewModel(application), F
     }
 
     private fun searchingFilm() {
-        viewModelScope.launch {
-            filmsList.value =
-                loadJson(context).filter {
-                    it.name.lowercase().contains(searchFieldState.value.searchText.lowercase())
-                }.toMutableList()
-        }
+
     }
 
+    private fun getFilms(
+        name: String,
+        category: List<String>,
+        token: String,
+        page: Int = 1,
+        limit: Int = 30,
+    ) {
+
+        viewModelScope.launch {
+            val response = Common.retrofitService.getFilms(
+                name = name,
+                category = category,
+                token = token,
+                page = page,
+                limit = limit
+            )
+
+
+            filmsList.value = response.body()!!.docs!!.map { it }.toMutableList()
+
+        }
+    }
 }
+
 
 @Suppress("UNCHECKED_CAST")
 class FilmViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
@@ -77,6 +91,7 @@ class FilmViewModelFactory(private val application: Application) : ViewModelProv
     }
 }
 
+@Suppress("SpellCheckingInspection")
 class PreviewViewModel : ViewModel(), FilmViewModel {
     private val _searchFieldState: MutableState<SearchFieldState> = mutableStateOf(
         SearchFieldState()
@@ -100,175 +115,17 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
 
     private val filmsList = MutableStateFlow(
         listOf(
-            Film(
+            FilmInList(
                 id = 1,
                 name = "Зелёная миля",
-                photo = R.drawable.the_green_mile,
-                date_publication = 1999,
-                rating = 9.1,
+                poster = Poster("R.drawable.the_green_mile"),
+                rating = Rating(9.1),
                 description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 2,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 3,
-                name = "Зелёная миля",
-                photo = R.drawable.the_green_mile,
-                date_publication = 1999,
-                rating = 9.1,
-                description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 4,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 5,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 6,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 7,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
+                ageRating = 16,
+                premiere = Premiere("19.08.2016")
             )
         )
     )
-    override val films: StateFlow<List<Film>> = filmsList
+    override val films: StateFlow<List<FilmInList>>
+        get() = filmsList
 }

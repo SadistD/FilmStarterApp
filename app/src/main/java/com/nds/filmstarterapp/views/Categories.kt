@@ -29,13 +29,14 @@ fun Categories(categoryList: List<String>) {
 fun CategoryChips(
     category: String,
     modifier: Modifier = Modifier,
+    isChecked: Boolean = false,
     onClick: () -> Unit = {  }
 ) {
     Chip(
         onClick = onClick,
         modifier = modifier.height(17.dp),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSecondary),
-        colors = ChipDefaults.chipColors(backgroundColor = Color.Transparent)
+        colors = ChipDefaults.chipColors(backgroundColor = if (isChecked) MaterialTheme.colors.secondary else Color.Transparent)
     ) {
         Text(
             text = category,

@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,7 +18,6 @@ import com.nds.filmstarterapp.model.Actor
 import com.nds.filmstarterapp.ui.theme.Shapes
 import com.nds.filmstarterapp.ui.theme.filmCardImageShape
 import com.nds.filmstarterapp.ui.theme.filmCardName
-import com.nds.filmstarterapp.viewModel.PreviewViewModel
 
 @Composable
 fun Actors(actors: List<Actor>) {
@@ -61,13 +59,13 @@ fun Actor(actor: Actor) {
 @Preview
 @Composable
 fun ActorsPreview() {
-    val actors = PreviewViewModel().films.collectAsState().value[1].actors
-    Actors(actors)
+//    val actors = PreviewViewModel().films.collectAsState().value[1].actors
+//    Actors(actors)
 }
 
 @Preview
 @Composable
 fun ActorPreview() {
-    val actor = PreviewViewModel().films.collectAsState().value[1].actors.first()
-    Actor(actor)
+//    val actor = PreviewViewModel().films.collectAsState().value[1].actors.first()
+//    Actor(actor)
 }

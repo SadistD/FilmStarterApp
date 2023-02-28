@@ -1,6 +1,5 @@
 package com.nds.filmstarterapp.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -11,29 +10,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.nds.filmstarterapp.viewModel.PreviewViewModel
-import com.nds.filmstarterapp.model.Film
+import coil.compose.AsyncImage
+import com.nds.filmstarterapp.model.kinopoisk_film.FilmInList
 import com.nds.filmstarterapp.navigation.NavRoute
 import com.nds.filmstarterapp.ui.theme.Shapes
 import com.nds.filmstarterapp.ui.theme.filmCardDescription
 import com.nds.filmstarterapp.ui.theme.filmCardImageShape
 import com.nds.filmstarterapp.ui.theme.filmCardName
+import com.nds.filmstarterapp.viewModel.PreviewViewModel
 
 @Composable
-fun FilmCard(navController: NavController, film: Film) {
+fun FilmCard(navController: NavController, film: FilmInList) {
     Column(
         modifier = Modifier
             .clickable { navController.navigate(NavRoute.Detail.route + "/${film.id}") },
         horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            painter = painterResource(id = film.photo),
+        AsyncImage(model = film.poster?.url,
             contentDescription = film.name,
             modifier = Modifier
                 .clip(Shapes.filmCardImageShape),
@@ -41,14 +39,14 @@ fun FilmCard(navController: NavController, film: Film) {
         )
 
         Text(
-            text = film.name,
+            text = film.name ?: "",
             modifier = Modifier
                 .padding(top = 8.dp, start = 3.dp),
             style = MaterialTheme.typography.filmCardName,
         )
 
         Text(
-            text = film.description,
+            text = film.description ?: "",
             modifier = Modifier
                 .padding(top = 10.dp, start = 3.dp),
             style = MaterialTheme.typography.filmCardDescription,
@@ -64,9 +62,9 @@ fun FilmCard(navController: NavController, film: Film) {
         ) {
             RatingBar(
                 modifier = Modifier.height(13.dp),
-                rating = film.rating
+                rating = film.rating?.kp ?: 0.0
             )
-            AgeRating(ageRating = film.ageRating)
+            AgeRating(ageRating = "${film.ageRating}+")
         }
     }
 }

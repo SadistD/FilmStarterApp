@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.R
-import com.nds.filmstarterapp.model.Film
+import com.nds.filmstarterapp.model.kinopoisk_film.FilmInList
 import com.nds.filmstarterapp.ui.theme.FilmStarterAppTheme
 import com.nds.filmstarterapp.ui.theme.filmFirstScreenHeading
 import com.nds.filmstarterapp.utils.Category
@@ -59,7 +59,7 @@ fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             content = {
-                items(filmList) { film: Film ->
+                items(filmList) { film: FilmInList ->
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         FilmCard(navController = navController, film = film)
                     }
