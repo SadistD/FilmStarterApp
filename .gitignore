@@ -8,3 +8,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/java/com/nds/filmstarterapp/utils/Private.kt

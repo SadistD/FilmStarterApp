@@ -1,4 +1,4 @@
-package com.nds.filmstarterapp.model.kinopoisk_film
+package com.nds.filmstarterapp.model.kinopoisk_films
 
 
 import com.google.gson.annotations.SerializedName

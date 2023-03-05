@@ -16,10 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nds.filmstarterapp.R
-import com.nds.filmstarterapp.model.kinopoisk_film.FilmInList
+import com.nds.filmstarterapp.model.kinopoisk_films.FilmInList
 import com.nds.filmstarterapp.ui.theme.FilmStarterAppTheme
 import com.nds.filmstarterapp.ui.theme.filmFirstScreenHeading
-import com.nds.filmstarterapp.utils.Category
 import com.nds.filmstarterapp.viewModel.FilmViewModel
 import com.nds.filmstarterapp.viewModel.PreviewViewModel
 import com.nds.filmstarterapp.views.Categories
@@ -29,7 +28,6 @@ import com.nds.filmstarterapp.views.SearchRow
 @Composable
 fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
     val filmList = viewModel.films.collectAsState().value
-
     Column(
         Modifier
             .fillMaxSize()
@@ -40,7 +38,7 @@ fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
                 viewModel.changeSearchFieldFocus()
             },
             changeSearchFieldText = { viewModel.changeSearchFieldText(it) },
-            searchFieldState = viewModel.searchFieldState.value,
+            searchFieldState = viewModel.searchFieldState.collectAsState().value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)
@@ -50,7 +48,7 @@ fun FilmFirstScreen(navController: NavController, viewModel: FilmViewModel) {
             modifier = Modifier.padding(start = 20.dp, bottom = 12.dp),
             style = MaterialTheme.typography.filmFirstScreenHeading
         )
-        Categories(Category.values().map { it.title })
+        Categories(viewModel)
         Spacer(modifier = Modifier.height(20.dp))
         LazyVerticalGrid(
             columns = GridCells.Adaptive(160.dp),

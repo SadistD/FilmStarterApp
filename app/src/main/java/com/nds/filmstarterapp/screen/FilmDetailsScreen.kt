@@ -19,10 +19,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.nds.filmstarterapp.R
-import com.nds.filmstarterapp.model.kinopoisk_film.FilmInList
+import com.nds.filmstarterapp.model.kinopoisk_category.CategoryItem
+import com.nds.filmstarterapp.model.kinopoisk_film.FilmKinopoisk
 import com.nds.filmstarterapp.ui.theme.*
 import com.nds.filmstarterapp.viewModel.FilmViewModel
 import com.nds.filmstarterapp.viewModel.PreviewViewModel
+import com.nds.filmstarterapp.views.Actors
 import com.nds.filmstarterapp.views.AgeRating
 import com.nds.filmstarterapp.views.CategoryChips
 import com.nds.filmstarterapp.views.RatingBar
@@ -31,12 +33,12 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, filmId: Int) {
-    val film = viewModel.films.collectAsState().value.first { it.id == filmId }
+fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel) {
+    val film = viewModel.filmKinopoisk.collectAsState().value
     val configuration = LocalConfiguration.current
     BottomSheetScaffold(
         sheetContent = { FrontLayer(film = film) },
-        sheetPeekHeight = configuration.screenHeightDp.dp - configuration.screenHeightDp.dp / 3,
+        sheetPeekHeight = configuration.screenHeightDp.dp - configuration.screenHeightDp.dp / 2,
         sheetShape = MaterialTheme.shapes.detailScreenColumnShape,
         sheetBackgroundColor = MaterialTheme.colors.background
     ) {
@@ -45,7 +47,7 @@ fun FilmDetailsScreen(navController: NavController, viewModel: FilmViewModel, fi
 }
 
 @Composable
-fun FrontLayer(film: FilmInList) {
+fun FrontLayer(film: FilmKinopoisk?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,32 +66,40 @@ fun FrontLayer(film: FilmInList) {
                     horizontalArrangement = Arrangement.spacedBy(14.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CategoryChips(category = film.id.toString())
+                    CategoryChips(
+                        category = CategoryItem(
+                            name = film?.genres?.get(0)?.name,
+                            slug = ""
+                        )
+                    )
                     Text(
-                        text = ZonedDateTime.parse(film.premiere?.russia?.format() ?: "").format(
-                            DateTimeFormatter.ofPattern("dd.MM.u")),
+                        text = ZonedDateTime.parse(
+                            film?.premiere?.world?.format() ?: "1900-01-01T00:00:00.000Z"
+                        ).format(
+                            DateTimeFormatter.ofPattern("dd.MM.u")
+                        ),
                         style = MaterialTheme.typography.date
                     )
                 }
 
                 Text(
-                    text = film.name ?:"",
+                    text = film?.name ?: "",
                     modifier = Modifier.padding(top = 20.dp, end = 8.dp),
                     style = MaterialTheme.typography.detailScreenName
                 )
 
             }
-            AgeRating(ageRating = "${film.ageRating}+", size = 20)
+            AgeRating(ageRating = "${film?.ageRating}+", size = 20)
         }
         RatingBar(
-            rating = film.rating?.kp ?: 0.0,
+            rating = film?.rating?.kp ?: 0.0,
             modifier = Modifier
                 .padding(start = 20.dp, top = 8.dp)
                 .height(16.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = film.description ?:"",
+            text = film?.description ?: "",
             modifier = Modifier.padding(start = 20.dp, end = 8.dp),
             style = MaterialTheme.typography.detailScreenDescription
         )
@@ -99,13 +109,14 @@ fun FrontLayer(film: FilmInList) {
             style = MaterialTheme.typography.filmDetailScreenHeading,
             modifier = Modifier.padding(start = 20.dp)
         )
-//        Actors(actors = film.actors)
+        Actors(actors = film?.persons ?: emptyList())
     }
 }
 
 @Composable
-fun BackLayer(film: FilmInList) {
-    AsyncImage(model = film.poster?.url ?: "",
+fun BackLayer(film: FilmKinopoisk?) {
+    AsyncImage(
+        model = film?.poster?.url ?: "",
         contentDescription = null,
         modifier = Modifier
             .fillMaxWidth()
@@ -121,7 +132,6 @@ fun DetailsScreenPreview() {
         FilmDetailsScreen(
             navController = rememberNavController(),
             viewModel = PreviewViewModel(),
-            filmId = 2
         )
     }
 }

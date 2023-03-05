@@ -1,102 +1,126 @@
 package com.nds.filmstarterapp.viewModel
 
-import android.app.Application
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.nds.filmstarterapp.model.kinopoisk_film.*
-import com.nds.filmstarterapp.repository.common.Common
+import com.nds.filmstarterapp.model.kinopoisk_category.CategoryItem
+import com.nds.filmstarterapp.model.kinopoisk_film.FilmKinopoisk
+import com.nds.filmstarterapp.model.kinopoisk_films.*
+import com.nds.filmstarterapp.repository.FilmRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 interface FilmViewModel {
     val films: StateFlow<List<FilmInList>>
-    val searchFieldState: State<SearchFieldState>
+    val searchFieldState: StateFlow<SearchFieldState>
+    val categoryList: StateFlow<List<CategoryItem>>
+    val filmKinopoisk: StateFlow<FilmKinopoisk?>
 
     fun changeSearchFieldFocus()
     fun changeSearchFieldVisible()
     fun changeSearchFieldText(searchText: String)
+    fun changeCategory(category: CategoryItem)
+    fun getFilm(id: Int)
 }
 
-class MainViewModel(application: Application) : AndroidViewModel(application), FilmViewModel {
-    private val context = application
-    private val filmsList = MutableStateFlow(mutableListOf<FilmInList>())
+class MainViewModel : ViewModel(), FilmViewModel {
+    private val _filmKinopoisk: MutableStateFlow<FilmKinopoisk?> = MutableStateFlow(null)
+    override val filmKinopoisk: StateFlow<FilmKinopoisk?> = _filmKinopoisk.asStateFlow()
+    private val repository: FilmRepository = FilmRepository()
+    private val filmsList = MutableStateFlow(listOf<FilmInList>())
     override val films: StateFlow<List<FilmInList>> = filmsList.asStateFlow()
+    private val _categoryList = MutableStateFlow(listOf<CategoryItem>())
+    override val categoryList: StateFlow<List<CategoryItem>> = _categoryList.asStateFlow()
 
-    init {
-        getFilms("", emptyList(), "HAZCP41-NGQ4XYG-H1SMS2R-0JH96E7")
-    }
-
-    private val _searchFieldState: MutableState<SearchFieldState> = mutableStateOf(
+    private val _searchFieldState: MutableStateFlow<SearchFieldState> = MutableStateFlow(
         SearchFieldState()
     )
 
-    override val searchFieldState: State<SearchFieldState> = _searchFieldState
+    override val searchFieldState: StateFlow<SearchFieldState> = _searchFieldState.asStateFlow()
+
+    init {
+        getFilms()
+        getCategory()
+    }
+
     override fun changeSearchFieldFocus() {
-        _searchFieldState.value =
-            searchFieldState.value.copy(isFocused = !searchFieldState.value.isFocused)
+        viewModelScope.launch {
+            _searchFieldState.emit(searchFieldState.value.copy(isFocused = !searchFieldState.value.isFocused))
+        }
+
     }
 
     override fun changeSearchFieldVisible() {
-        _searchFieldState.value =
-            searchFieldState.value.copy(isVisible = !searchFieldState.value.isVisible)
+        viewModelScope.launch {
+            _searchFieldState.emit(searchFieldState.value.copy(isVisible = !searchFieldState.value.isVisible))
+        }
+
     }
 
     override fun changeSearchFieldText(searchText: String) {
-        _searchFieldState.value =
-            searchFieldState.value.copy(searchText = searchText)
-        searchingFilm()
-    }
-
-    private fun searchingFilm() {
-
-    }
-
-    private fun getFilms(
-        name: String,
-        category: List<String>,
-        token: String,
-        page: Int = 1,
-        limit: Int = 30,
-    ) {
-
         viewModelScope.launch {
-            val response = Common.retrofitService.getFilms(
-                name = name,
-                category = category,
-                token = token,
-                page = page,
-                limit = limit
-            )
+            _searchFieldState.emit(searchFieldState.value.copy(searchText = searchText))
+            getFilms()
+        }
 
+    }
 
-            filmsList.value = response.body()!!.docs!!.map { it }.toMutableList()
-
+    override fun changeCategory(category: CategoryItem) {
+        viewModelScope.launch {
+            if (category.isChecked) {
+                category.isChecked = false
+                _searchFieldState.emit(searchFieldState.value.copy(
+                    categoryList = searchFieldState.value.categoryList.filter { it != category.name }
+                ))
+            } else {
+                category.isChecked = true
+                _searchFieldState.emit(
+                    searchFieldState.value.copy(
+                        categoryList = searchFieldState.value.categoryList.plus(category.name.toString())
+                    )
+                )
+            }
+            getFilms()
         }
     }
-}
 
+    override fun getFilm(id: Int) {
+        viewModelScope.launch {
 
-@Suppress("UNCHECKED_CAST")
-class FilmViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(application = application) as T
+            _filmKinopoisk.value = repository.getFilm(id)
         }
-        throw IllegalArgumentException("Unknown ViewModel Class")
+
+
+    }
+
+    private fun getCategory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _categoryList.emit(repository.getCategory())
+        }
+    }
+
+    private fun getFilms() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("search", searchFieldState.value.toString())
+            filmsList.emit(
+                repository.getFilmList(
+                    search = searchFieldState.value,
+                )
+            )
+        }
     }
 }
 
 @Suppress("SpellCheckingInspection")
 class PreviewViewModel : ViewModel(), FilmViewModel {
-    private val _searchFieldState: MutableState<SearchFieldState> = mutableStateOf(
+    private val _searchFieldState: MutableStateFlow<SearchFieldState> = MutableStateFlow(
         SearchFieldState()
     )
-    override val searchFieldState: State<SearchFieldState> = _searchFieldState
+    override val searchFieldState: StateFlow<SearchFieldState> = _searchFieldState
+    override val categoryList: StateFlow<List<CategoryItem>> =
+        MutableStateFlow(mutableListOf(CategoryItem("", ""))).asStateFlow()
+    override val filmKinopoisk: StateFlow<FilmKinopoisk?>
+        get() = TODO("Not yet implemented")
 
     override fun changeSearchFieldVisible() {
         _searchFieldState.value =
@@ -111,6 +135,14 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
     override fun changeSearchFieldText(searchText: String) {
         _searchFieldState.value =
             searchFieldState.value.copy(searchText = searchText)
+    }
+
+    override fun changeCategory(category: CategoryItem) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFilm(id: Int) {
+        TODO("Not yet implemented")
     }
 
     private val filmsList = MutableStateFlow(
@@ -118,7 +150,7 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
             FilmInList(
                 id = 1,
                 name = "Зелёная миля",
-                poster = Poster("R.drawable.the_green_mile"),
+                poster = Poster("https://st.kp.yandex.net/images/film_big/435.jpg"),
                 rating = Rating(9.1),
                 description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
                 ageRating = 16,
@@ -127,5 +159,5 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
         )
     )
     override val films: StateFlow<List<FilmInList>>
-        get() = filmsList
+        get() = filmsList.asStateFlow()
 }
