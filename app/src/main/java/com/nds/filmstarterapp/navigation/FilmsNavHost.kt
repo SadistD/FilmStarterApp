@@ -27,10 +27,10 @@ fun FilmNavHost(viewModel: FilmViewModel, navController: NavHostController) {
         }
         composable(NavRoute.Detail.route + "/{${Constants.Key.ID}}") { backStackEntry ->
             backStackEntry.arguments?.getString(Constants.Key.ID)?.let {
+                viewModel.getFilm(it.toInt())
                 FilmDetailsScreen(
                     navController = navController,
                     viewModel = viewModel,
-                    filmId = it.toInt()
                 )
             }
         }

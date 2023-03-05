@@ -1,87 +1,126 @@
 package com.nds.filmstarterapp.viewModel
 
-import android.app.Application
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.nds.filmstarterapp.R
-import com.nds.filmstarterapp.model.Actor
-import com.nds.filmstarterapp.model.Film
-import com.nds.filmstarterapp.utils.loadJson
+import com.nds.filmstarterapp.model.kinopoisk_category.CategoryItem
+import com.nds.filmstarterapp.model.kinopoisk_film.FilmKinopoisk
+import com.nds.filmstarterapp.model.kinopoisk_films.*
+import com.nds.filmstarterapp.repository.FilmRepository
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 interface FilmViewModel {
-    val films: StateFlow<List<Film>>
-    val searchFieldState: State<SearchFieldState>
+    val films: StateFlow<List<FilmInList>>
+    val searchFieldState: StateFlow<SearchFieldState>
+    val categoryList: StateFlow<List<CategoryItem>>
+    val filmKinopoisk: StateFlow<FilmKinopoisk?>
 
     fun changeSearchFieldFocus()
     fun changeSearchFieldVisible()
     fun changeSearchFieldText(searchText: String)
+    fun changeCategory(category: CategoryItem)
+    fun getFilm(id: Int)
 }
 
-class MainViewModel(application: Application) : AndroidViewModel(application), FilmViewModel {
-    private val context = application
-    private val filmsList = MutableStateFlow(mutableListOf<Film>())
-    override val films = filmsList.asStateFlow()
+class MainViewModel : ViewModel(), FilmViewModel {
+    private val _filmKinopoisk: MutableStateFlow<FilmKinopoisk?> = MutableStateFlow(null)
+    override val filmKinopoisk: StateFlow<FilmKinopoisk?> = _filmKinopoisk.asStateFlow()
+    private val repository: FilmRepository = FilmRepository()
+    private val filmsList = MutableStateFlow(listOf<FilmInList>())
+    override val films: StateFlow<List<FilmInList>> = filmsList.asStateFlow()
+    private val _categoryList = MutableStateFlow(listOf<CategoryItem>())
+    override val categoryList: StateFlow<List<CategoryItem>> = _categoryList.asStateFlow()
+
+    private val _searchFieldState: MutableStateFlow<SearchFieldState> = MutableStateFlow(
+        SearchFieldState()
+    )
+
+    override val searchFieldState: StateFlow<SearchFieldState> = _searchFieldState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            filmsList.value.addAll(loadJson(context))
-        }
+        getFilms()
+        getCategory()
     }
 
-    private val _searchFieldState: MutableState<SearchFieldState> = mutableStateOf(
-        SearchFieldState()
-    )
-
-    override val searchFieldState: State<SearchFieldState> = _searchFieldState
     override fun changeSearchFieldFocus() {
-        _searchFieldState.value =
-            searchFieldState.value.copy(isFocused = !searchFieldState.value.isFocused)
+        viewModelScope.launch {
+            _searchFieldState.emit(searchFieldState.value.copy(isFocused = !searchFieldState.value.isFocused))
+        }
+
     }
 
     override fun changeSearchFieldVisible() {
-        _searchFieldState.value =
-            searchFieldState.value.copy(isVisible = !searchFieldState.value.isVisible)
+        viewModelScope.launch {
+            _searchFieldState.emit(searchFieldState.value.copy(isVisible = !searchFieldState.value.isVisible))
+        }
+
     }
 
     override fun changeSearchFieldText(searchText: String) {
-        _searchFieldState.value =
-            searchFieldState.value.copy(searchText = searchText)
-        searchingFilm()
-    }
-
-    private fun searchingFilm() {
         viewModelScope.launch {
-            filmsList.value =
-                loadJson(context).filter {
-                    it.name.lowercase().contains(searchFieldState.value.searchText.lowercase())
-                }.toMutableList()
+            _searchFieldState.emit(searchFieldState.value.copy(searchText = searchText))
+            getFilms()
+        }
+
+    }
+
+    override fun changeCategory(category: CategoryItem) {
+        viewModelScope.launch {
+            if (category.isChecked) {
+                category.isChecked = false
+                _searchFieldState.emit(searchFieldState.value.copy(
+                    categoryList = searchFieldState.value.categoryList.filter { it != category.name }
+                ))
+            } else {
+                category.isChecked = true
+                _searchFieldState.emit(
+                    searchFieldState.value.copy(
+                        categoryList = searchFieldState.value.categoryList.plus(category.name.toString())
+                    )
+                )
+            }
+            getFilms()
         }
     }
 
-}
+    override fun getFilm(id: Int) {
+        viewModelScope.launch {
 
-@Suppress("UNCHECKED_CAST")
-class FilmViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(application = application) as T
+            _filmKinopoisk.value = repository.getFilm(id)
         }
-        throw IllegalArgumentException("Unknown ViewModel Class")
+
+
+    }
+
+    private fun getCategory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _categoryList.emit(repository.getCategory())
+        }
+    }
+
+    private fun getFilms() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("search", searchFieldState.value.toString())
+            filmsList.emit(
+                repository.getFilmList(
+                    search = searchFieldState.value,
+                )
+            )
+        }
     }
 }
 
+@Suppress("SpellCheckingInspection")
 class PreviewViewModel : ViewModel(), FilmViewModel {
-    private val _searchFieldState: MutableState<SearchFieldState> = mutableStateOf(
+    private val _searchFieldState: MutableStateFlow<SearchFieldState> = MutableStateFlow(
         SearchFieldState()
     )
-    override val searchFieldState: State<SearchFieldState> = _searchFieldState
+    override val searchFieldState: StateFlow<SearchFieldState> = _searchFieldState
+    override val categoryList: StateFlow<List<CategoryItem>> =
+        MutableStateFlow(mutableListOf(CategoryItem("", ""))).asStateFlow()
+    override val filmKinopoisk: StateFlow<FilmKinopoisk?>
+        get() = TODO("Not yet implemented")
 
     override fun changeSearchFieldVisible() {
         _searchFieldState.value =
@@ -96,179 +135,29 @@ class PreviewViewModel : ViewModel(), FilmViewModel {
     override fun changeSearchFieldText(searchText: String) {
         _searchFieldState.value =
             searchFieldState.value.copy(searchText = searchText)
+    }
+
+    override fun changeCategory(category: CategoryItem) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFilm(id: Int) {
+        TODO("Not yet implemented")
     }
 
     private val filmsList = MutableStateFlow(
         listOf(
-            Film(
+            FilmInList(
                 id = 1,
                 name = "Зелёная миля",
-                photo = R.drawable.the_green_mile,
-                date_publication = 1999,
-                rating = 9.1,
+                poster = Poster("https://st.kp.yandex.net/images/film_big/435.jpg"),
+                rating = Rating(9.1),
                 description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 2,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 3,
-                name = "Зелёная миля",
-                photo = R.drawable.the_green_mile,
-                date_publication = 1999,
-                rating = 9.1,
-                description = "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 4,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 5,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 6,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
-            ),
-            Film(
-                id = 7,
-                name = "Побег из Шоушенка",
-                photo = R.drawable.the_shawshank_redemption,
-                date_publication = 1994,
-                rating = 9.1,
-                description = "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
-                ageRating = "16+",
-                category = "Драма",
-                actors = listOf(
-                    Actor(
-                        name = "Том Хэнкс",
-                        photo = R.drawable.tom_hanks
-                    ),
-                    Actor(
-                        name = "Майкл Кларк Дункан",
-                        photo = R.drawable.michael_clarke
-                    ),
-                    Actor(
-                        name = "Дэвид Морс",
-                        photo = R.drawable.david_morse
-                    )
-                )
+                ageRating = 16,
+                premiere = Premiere("19.08.2016")
             )
         )
     )
-    override val films: StateFlow<List<Film>> = filmsList
+    override val films: StateFlow<List<FilmInList>>
+        get() = filmsList.asStateFlow()
 }
